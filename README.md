@@ -1,4 +1,6 @@
 # SIMULATION AND IMPLEMENTATION OF MULTIPLEXER
+## PRATHEESH G
+## 212223060205
 
 ## AIM
 To design and simulate a 4:1 Multiplexer (MUX) using Verilog HDL in four different modeling styles—Gate-Level, Data Flow, Behavioral, and Structural—and to verify its functionality through a testbench using the Vivado 2023.1 simulation environment. The experiment aims to understand how different abstraction levels in Verilog can be used to describe the same digital logic circuit and analyze their performance.
@@ -62,79 +64,67 @@ To design and simulate a 4:1 Multiplexer (MUX) using Verilog HDL in four differe
 
 ### 4:1 MUX Gate-Level Implementation
 ```verilog
-module mux4_to_1_gate (
-    input wire A,
-    input wire B,
-    input wire C,
-    input wire D,
-    input wire S0,
-    input wire S1,
-    output wire Y
-);
-    wire not_S0, not_S1;
-    wire A_and, B_and, C_and, D_and;
-
-    not (not_S0, S0);
-    not (not_S1, S1);
-
-    and (A_and, A, not_S1, not_S0);
-    and (B_and, B, not_S1, S0);
-    and (C_and, C, S1, not_S0);
-    and (D_and, D, S1, S0);
-
-    or (Y, A_and, B_and, C_and, D_and);
+module mux_24gl(s,a,b,c,d,y);
+input [1:0]s;
+input a,b,c,d;
+output y;
+wire [5:0]w;
+not g1(w[0],s[0]);
+not g2(w[1],s[1]);
+and g3(w[2],w[0],w[1],a);
+and g4(w[3],w[0],s[1],b);
+and g5(w[4],s[0],w[1],c);
+and g6(w[5],s[0],s[1],d);
+or o1(y,w[2],w[3],w[4],w[5]);
 endmodule
 ```
 ## Simulated Output Gate Level Modelling
 
-_______ Here Paste the Simulated output  ___________
+![Screenshot 2025-03-15 082434](https://github.com/user-attachments/assets/8367e2d3-cf4b-47bc-bca6-84887be33c10)
+
 
 ### 4:1 MUX Data Flow Implementation
 ```verilog
-module mux4_to_1_dataflow (
-    input wire A,
-    input wire B,
-    input wire C,
-    input wire D,
-    input wire S0,
-    input wire S1,
-    output wire Y
-);
-    assign Y = (~S1 & ~S0 & A) |
-               (~S1 & S0 & B) |
-               (S1 & ~S0 & C) |
-               (S1 & S0 & D);
+module mux_24dl(s,a,b,c,d,y);
+input [1:0]s;
+input a,b,c,d;
+output y;
+wire [3:0]w;
+assign w[0]=~s[1]&~s[0]&a;
+assign w[1]=~s[1]&s[0]&b;
+assign w[2]=s[1]&~s[0]&c;
+assign w[3]=s[1]&s[0]&d;
+assign y=w[0]|w[1]|w[2]|w[3];
 endmodule
 ```
 ## Simulated Output Data Flow Modelling
 
-_______ Here Paste the Simulated output  ___________
+![Screenshot 2025-03-15 085853](https://github.com/user-attachments/assets/0502199f-a2e6-49ed-b657-5244037b30a4)
+
 
 ### 4:1 MUX Behavioral Implementation
 ```verilog
-module mux4_to_1_behavioral (
-    input wire A,
-    input wire B,
-    input wire C,
-    input wire D,
-    input wire S0,
-    input wire S1,
-    output reg Y
-);
-    always @(*) begin
-        case ({S1, S0})
-            2'b00: Y = A;
-            2'b01: Y = B;
-            2'b10: Y = C;
-            2'b11: Y = D;
-            default: Y = 1'bx;
-        endcase
-    end
+module mux24_beh(i,s,y);
+input [4:1]i;
+input [1:0]s;
+output reg y;
+always@(*)
+begin
+if(s[1]==0&s[0]==0)
+y=i[1];
+else if(s[1]==0&s[0]==1)
+y=i[2];
+else if(s[1]==1&s[0]==0)
+y=i[3];
+else if(s[1]==1&s[0]==1)
+y=i[4];
+end
 endmodule
 ```
 ## Simulated Output Behavioral Modelling
 
-_______ Here Paste the Simulated output  ___________
+![Screenshot 2025-03-15 092626](https://github.com/user-attachments/assets/c5b0c33d-d414-45e7-8453-c3da51df69be)
+
 
 
 ### 4:1 MUX Structural Implementation
@@ -171,7 +161,8 @@ endmodule
 ```
 ## Simulated Output Structural Modelling
 
-_______ Here Paste the Simulated output  ___________
+![Screenshot 2025-03-15 094014](https://github.com/user-attachments/assets/4a380072-cc98-4afc-ae46-d045f1ffb633)
+
 
 ### Testbench Implementation
 ```verilog
