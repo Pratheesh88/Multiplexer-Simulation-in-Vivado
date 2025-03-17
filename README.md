@@ -161,7 +161,7 @@ endmodule
 ```
 ## Simulated Output Structural Modelling
 
-![Screenshot 2025-03-15 094014](https://github.com/user-attachments/assets/4a380072-cc98-4afc-ae46-d045f1ffb633)
+![Screenshot 2025-03-15 092626](https://github.com/user-attachments/assets/59c30257-0eb2-4f96-a752-70e32819548b)
 
 
 ### Testbench Implementation
